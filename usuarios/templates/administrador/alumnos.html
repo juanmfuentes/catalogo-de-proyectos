@@ -1,0 +1,131 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4">
+    <div class="mt-4 ms-4">
+        <h1>Lista de Alumnos</h1>
+    </div>
+    <div class="p-4">
+        <div class="d-flex justify-content-between">
+            <div>
+                <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">Agregar
+                    Alumno</button>
+                <a href="{% url 'exportar_alumnos' %}" class="btn btn-primary">Exportar a XLSX</a>
+            </div>
+            <div>
+                <form id="confirmForm" action="{% url 'controlar_paginas' %}" method="POST">
+                    {% csrf_token %}
+                    <input type="hidden" name="alumnos"
+                        value="{% if configuracion.estado_paginas_alumnos %}desactivar{% else %}activar{% endif %}">
+                    <a href="#"
+                        class="btn {% if configuracion.estado_paginas_alumnos %}btn-danger{% else %}btn-success{% endif %}"
+                        data-bs-toggle="modal" data-bs-target="#confirmModal">{% if configuracion.estado_paginas_alumnos%}Desactivar proceso{% else %}Activar proceso{% endif %}
+                    </a>
+                </form>
+            </div>
+        </div>
+        <div class="table-responsive">
+            <table class="table mt-4 table-striped table-hover">
+                <thead>
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Nombre Completo</th>
+                        <th>Sexo</th>
+                        <th>Correo Personal</th>
+                        <th>Correo Institucional</th>
+                        <th>Teléfono</th>
+                        <th>Programa Educativo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for alumno in alumnos %}
+                    <tr>
+                        <td>{{ alumno.matricula }}</td>
+                        <td>{{ alumno.nombre }} {{ alumno.apellido_paterno }} {{ alumno.apellido_materno }}</td>
+                        <td>{{ alumno.sexo }}</td>
+                        <td>{{ alumno.correo_personal }}</td>
+                        <td>{{ alumno.correo_institucional }}</td>
+                        <td>{{ alumno.telefono }}</td>
+                        <td>{{ alumno.programa_educativo }}</td>
+                        <td>
+                            <a href="{% url 'editar_alumno' alumno.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalEliminar{{ alumno.pk }}">Eliminar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Alumno -->
+<div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarLabel">Agregar Alumno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de Agregar Alumno -->
+                <form action="{% url 'administrador_alumnos' %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    {{ user_form.as_p }}
+                    <div class="pt-2 pb-4 d-grid gap-2">
+                        <button type="submit" class="btn btn-success btn-block">Agregar</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<!-- Modal Eliminar Alumno -->
+{% for alumno in alumnos %}
+<div class="modal fade" id="modalEliminar{{ alumno.pk }}" tabindex="-1"
+    aria-labelledby="modalEliminarLabel{{ alumno.pk }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel{{ alumno.pk }}">Eliminar Alumno</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar al alumno "{{ alumno.nombre }}"?</p>
+                <form action="{% url 'eliminar_alumno' alumno.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+<!-- Confirm Modal -->
+<div class="modal fade" id="confirmModal" tabindex="-1" aria-labelledby="confirmModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmModalLabel">Confirmar Acción</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Está seguro que desea {% if configuracion.estado_paginas_alumnos %}desactivar{% else %}activar{% endif %} el proceso de selección de proyectos de los alumnos?</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button"
+                    class="btn {% if configuracion.estado_paginas_alumnos %}btn-danger{% else %}btn-success{% endif %}"
+                    onclick="document.getElementById('confirmForm').submit()">Confirmar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+{% endblock %}

@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+
+{% block content %}
+
+<div class="vh-100 d-flex justify-content-center align-items-center" style="background: linear-gradient(45deg, rgba(25,135,84,1) 0%, rgba(255,250,250,1) 100%);">
+    <div class="card p-5 shadow rounded-4 bg-light mx-4">
+        <div class="mb-2">
+            <a type="button"
+                class="btn btn-link link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                href="{% url 'index' %}">
+                <i class="fa-solid fa-backward-step"></i>
+                <span class="fw-light">Regresar</span>
+            </a>
+        </div>
+        <div class="text-center mb-3">
+            <div>
+                {% load static %}
+                <img src="{% static 'images/logo.svg' %}" alt="Logo" height="100" class="mb-3">
+            </div>
+            <h1>¡UPS! :(</h1>
+            <h4 class="fw-light text-muted mb-5">Catálogo de Proyectos para Estancias y Estadías</h4>
+            <div>
+                Por el momento no puede realizar el registro de proyectos para cátalogo de estancias y estadías.
+                <br /> Te invitamos a que estés pendiente a las fechas establecidas en la convocatoria.
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

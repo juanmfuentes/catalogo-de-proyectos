@@ -1,0 +1,116 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4">
+    <div class="ms-4 mt-4">
+        <h1>Lista de Proyectos</h1>
+    </div>
+    <div class="p-4">
+        <button class="btn btn-success" data-bs-toggle="modal" data-bs-target="#modalAgregar">Agregar Proyecto</button>
+        <a href="{% url 'exportar_proyectos' %}" class="btn btn-primary">Exportar a XLSX</a>
+        <div class="table-responsive">
+            <table class="table mt-4 table-striped table-hover">
+                <thead class="sticky-top">
+                    <tr>
+                        <th>Empresa</th>
+                        <th>Nombre</th>
+                        <th>Periodo y Año</th>
+                        <th>Programa Educativo</th>
+                        <th>Proceso</th>
+                        <th>Modalidad</th>
+                        <th>Asesor Laboral</th>
+                        <th>Alumnos Requeridos</th>
+                        <th>Objetivo y Justificación</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for proyecto in proyectos %}
+                    <tr>
+                        <td>{{ proyecto.id_empresa.razon_social }}</td>
+                        <td>{{ proyecto.nombre }}</td>
+                        <td>{{ proyecto.periodo }} {{ proyecto.año }}</td>
+                        <td>{{ proyecto.id_programa_educativo.nombre }}</td>
+                        <td>{{ proyecto.id_proceso.nombre }}</td>
+                        <td>{{ proyecto.modalidad }}</td>
+                        <td>{{ proyecto.asesor }}</td>
+                        <td>{{ proyecto.vacantes }} (Disponibles: {{ proyecto.vacantes_disponibles}})</td>
+                        <td>
+                            <button type="button" class="btn btn-secondary btn-sm" data-bs-toggle="modal"
+                            data-bs-target="#detallesEnlace{{ proyecto.id }}">Detalles</button>
+                        </td>
+                        <td>
+                            <a href="{% url 'editar_proyecto' proyecto.pk %}" class="btn btn-warning btn-sm">Editar</a>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalEliminar{{ proyecto.pk }}">Eliminar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Agregar Proyecto -->
+<div class="modal fade" id="modalAgregar" tabindex="-1" aria-labelledby="modalAgregarLabel" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalAgregarLabel">Agregar Proyecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Formulario de Agregar Proyecto -->
+                <form action="{% url 'administrador_proyectos' %}" method="post">
+                    {% csrf_token %}
+                    {{ form.as_p }}
+                    <button type="submit" class="btn btn-success">Agregar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Proyecto -->
+{% for proyecto in proyectos %}
+<div class="modal fade" id="modalEliminar{{ proyecto.pk }}" tabindex="-1"
+    aria-labelledby="modalEliminarLabel{{ proyecto.pk }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel{{ proyecto.pk }}">Eliminar Proyecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas eliminar el proyecto "{{ proyecto.nombre }}"?</p>
+                <form action="{% url 'eliminar_proyecto' proyecto.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% for proyecto in proyectos %}
+<!-- Modal para mostrar más información del proyecto -->
+<div class="modal fade" id="detallesEnlace{{ proyecto.id }}" tabindex="-1" aria-labelledby="proyectoModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="empresaModalLabel">{{ proyecto.nombre }} - {{proyecto.id_empresa.razon_social}}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Objetivo:</strong> {{ proyecto.objetivo }}</p>
+                <p><strong>Justificación:</strong> {{ proyecto.justificacion }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

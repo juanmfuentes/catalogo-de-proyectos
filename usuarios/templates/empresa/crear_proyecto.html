@@ -1,0 +1,138 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4">
+    {% if show_confirm_message %}
+    <div class="container p-4" id="confirmMessage">
+        <div class="jumbotron p-4 text-center">
+            <h1 class="display-4">¿Está listo para crear un proyecto?</h1>
+            <hr class="my-4">
+            <p class="lead">¡Excelente elección! Comienza ahora haciendo clic en el botón de abajo:</p>
+            <button id="confirmBtn" class="btn btn-success btn-lg">Sí, estoy listo</button>
+        </div>
+        {% if user.is_authenticated %}
+        <footer class="footer bg-light p-4 fixed-bottom fw-light shadow-lg">
+            <div class="container pb-5 pt-3">
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="d-flex align-items-center">
+                            {% load static %}
+                            <img src="{% static 'images/logo.svg' %}" alt="Logo" height="50" class="mb-3 me-2">
+                            <h6 class="text-muted">[Nombre de la Universidad]</h6>
+                        </div>
+                        <div class="d-none d-lg-inline">
+                            <p class="mb-3">Copyright © 2024 [Nombre de la Universidad]</p>
+                            <p>Todos los derechos reservados.</p>
+                            <p>Catálogo de Proyectos | 2024</p>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-3 text-muted">Información de contacto</h6>
+                        <p>Correo electrónico: <a href="" target="_blank"
+                                rel="noopener noreferrer" class="link-success">contacto@universidad.edu.mx</a></p>
+                        <p>Teléfono: <a href="" target="_blank" rel="noopener noreferrer" class="link-success"s>(000) 000 0000 Ext.
+                                0000-0000</a></p>
+                        <p>Ubicación: [Dirección de la Universidad]</p>
+                    </div>
+                    <div class="col-md-4">
+                        <h6 class="mb-3 text-muted">Redes sociales</h6>
+                        <ul class="list-inline">
+                            <li class="list-inline-item"><a href=" "
+                                    class="text-muted" target="_blank" rel="noopener noreferrer"><i
+                                        class="fab fa-facebook-f"></i></a>
+                            </li>
+                            <li class="list-inline-item"><a href=" " class="text-muted"
+                                    target="_blank" rel="noopener noreferrer"><i class="fab fa-twitter"></i></a></li>
+                            <li class="list-inline-item"><a href=" " class="text-muted"
+                                    target="_blank" rel="noopener noreferrer"><i class="fab fa-instagram"></i></a>
+                            <li class="list-inline-item"><a href=" " class="text-muted"
+                                    target="_blank" rel="noopener noreferrer"><i class="fa-solid fa-earth-americas"></i></a>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </footer>
+
+        {% endif %}
+    </div>
+    {% endif %}
+
+    {% if show_success_message %}
+    <div class="container mt-4">
+        <div class="alert alert-success text-center">
+            Proyecto registrado correctamente.
+            ¿Deseas realizar otro registro?
+            <a href="{% url 'empresa_crear_proyecto' %}" class="btn btn-success mx-2">Sí</a>
+            <a href="{% url 'empresa_proyectos' %}" class="btn btn-secondary mx-2">No</a>
+        </div>
+    </div>
+    {% endif %}
+
+    <div class="container">
+        <div id="formContainer" {% if show_confirm_message %}style="display: none;" {% endif %}
+            class="p-4 card rounded-4 shadow-sm">
+            <h1 class="mb-4 text-muted">Crear proyecto</h1>
+            <form method="post">
+                {% csrf_token %}
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label for="{{ form.nombre.id_for_label }}">Nombre</label>
+                            {{ form.nombre }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.modalidad.id_for_label }}">Modalidad</label>
+                            {{ form.modalidad }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.periodo.id_for_label }}">Período</label>
+                            {{ form.periodo }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.año.id_for_label }}">Año</label>
+                            {{ form.año }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.objetivo.id_for_label }}">Objetivo</label>
+                            {{ form.objetivo }}
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group mb-4">
+                            <label for="{{ form.vacantes.id_for_label }}">Vacantes</label>
+                            {{ form.vacantes }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.asesor.id_for_label }}">Asesor</label>
+                            {{ form.asesor }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.id_programa_educativo.id_for_label }}">Programa Educativo</label>
+                            {{ form.id_programa_educativo }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.id_proceso.id_for_label }}">Proceso</label>
+                            {{ form.id_proceso }}
+                        </div>
+                        <div class="form-group mb-4">
+                            <label for="{{ form.justificacion.id_for_label }}">Justificación</label>
+                            {{ form.justificacion }}
+                        </div>
+                    </div>
+                </div>
+                <input type="hidden" name="id_empresa" value="{{ request.user.empresa.id }}">
+                <button type="submit" class="btn btn-success">Registrar Proyecto</button>
+            </form>
+        </div>
+    </div>
+</div>
+
+
+<script>
+    document.getElementById("confirmBtn").addEventListener("click", function () {
+        document.getElementById("confirmMessage").style.display = "none";
+        document.getElementById("formContainer").style.display = "block";
+    });
+</script>
+{% endblock %}

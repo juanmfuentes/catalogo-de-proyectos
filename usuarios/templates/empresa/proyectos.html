@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container mt-5">
+    <div class="ms-4 mt-4">
+        <h1>Mis Proyectos</h1>
+    </div>
+    {% if proyectos %}
+    <div class="row mt-4">
+        {% for proyecto in proyectos %}
+        <div class="col-md-4 mb-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h5 class="card-title">{{ proyecto.nombre }}</h5>
+                    <p class="card-text"><strong>Proceso:</strong> {{ proyecto.id_proceso.nombre }}</p>
+                    <p class="card-text"><strong>Vacantes disponibles:</strong> {{ proyecto.vacantes_disponibles }}</p>
+                    <p class="card-text"><strong>Periodo:</strong> {{ proyecto.periodo }} {{ proyecto.año }}</p>
+                    <p class="card-text"><strong>Programa educativo:</strong> {{ proyecto.id_programa_educativo.nombre }}</p>
+                    <button class="btn btn-secondary" data-bs-toggle="modal" data-bs-target="#modal{{ proyecto.id }}">Ver
+                        detalles</button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Modal -->
+        <div class="modal fade" id="modal{{ proyecto.id }}" tabindex="-1" aria-labelledby="modal{{ proyecto.id }}Label"
+            aria-hidden="true">
+            <div class="modal-dialog modal-dialog-centered">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="modal{{ proyecto.id }}Label">{{ proyecto.nombre }}</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p><strong>Proceso:</strong> {{ proyecto.id_proceso.nombre }}</p>
+                        <p><strong>Vacantes:</strong> {{ proyecto.vacantes }}</p>
+                        <p><strong>Vacantes disponibles:</strong> {{ proyecto.vacantes_disponibles }}</p>
+                        <p><strong>Periodo:</strong> {{ proyecto.periodo }}</p>
+                        <p><strong>Modalidad:</strong> {{ proyecto.modalidad }}</p>
+                        <p><strong>Objetivo:</strong> {{ proyecto.objetivo }}</p>
+                        <p><strong>Justificación:</strong> {{ proyecto.justificacion }}</p>
+                        <p><strong>Asesor:</strong> {{ proyecto.asesor }}</p>
+                        <p><strong>Programa educativo:</strong> {{ proyecto.id_programa_educativo.nombre }}</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <div class="p-4">
+        <p>No hay proyectos registrados.</p>
+        <p>Si deseas crear un proyecto, puedes hacerlo <a href="{% url 'empresa_crear_proyecto' %}">aquí</a>.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

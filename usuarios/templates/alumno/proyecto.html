@@ -1,0 +1,98 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4 container">
+    <div class="ms-4 mt-4">
+        <h1>Mis Proyectos</h1>
+    </div>
+    <div class="row p-4">
+        {% if proyectos %}
+        {% for proyecto in proyectos %}
+        <div class="col-md-3 mb-3">
+            <div class="card mb-3">
+                <div class="card-header">
+                    <h5 class="card-title m-1">{{ proyecto.nombre }}</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Periodo:</strong> {{ proyecto.periodo }} {{ proyecto.año }}</p>
+                    <p><strong>Proceso:</strong> {{ proyecto.id_proceso.nombre }}</p>
+                    <p><strong>Modalidad:</strong> {{ proyecto.modalidad }}</p>
+                    <p><strong>Asesor Laboral:</strong> {{ proyecto.asesor }}</p>
+                    <p><strong>Ubicación:</strong> {{ proyecto.id_empresa.ciudad }}, {{proyecto.id_empresa.entidad}}</p>
+                    <a href="{% url 'descargar_proyecto_pdf' proyecto.id %}" class="btn btn-success my-1"><i class="fa-solid fa-file-pdf"></i></a>
+                    <button type="button" class="btn btn-secondary my-1" data-bs-toggle="modal"
+                        data-bs-target="#proyectoModal{{ proyecto.id }}"><i class="fa-solid fa-circle-info"></i></button>
+                    <button type="button" class="btn btn-danger my-1" data-bs-toggle="modal"
+                        data-bs-target="#confirmModal{{ proyecto.id }}">
+                        Deseleccionar
+                    </button>
+                </div>
+            </div>
+        </div>
+        <!-- Modal de confirmación -->
+        <div class="modal fade" id="confirmModal{{ proyecto.id }}" tabindex="-1"
+            aria-labelledby="confirmModalLabel{{ proyecto.id }}" aria-hidden="true">
+            <div class="modal-dialog">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="confirmModalLabel{{ proyecto.id }}">Confirmación</h5>
+                        <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                    </div>
+                    <div class="modal-body">
+                        <p>¿Estás seguro de que deseas deseleccionar el proyecto "<strong>{{ proyecto.nombre}}</strong>"?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                        <form method="post" action="{% url 'alumno_proyecto' %}">
+                            {% csrf_token %}
+                            <input type="hidden" name="proyecto_id" value="{{ proyecto.id }}">
+                            <button type="submit" class="btn btn-danger">Confirmar</button>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+        {% else %}
+        <p>No has seleccionado ningún proyecto.</p>
+        {% endif %}
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+    </div>
+</div>
+
+{% for proyecto in proyectos %}
+<!-- Modal para mostrar más información del proyecto -->
+<div class="modal fade" id="proyectoModal{{ proyecto.id }}" tabindex="-1" aria-labelledby="proyectoModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proyectoModalLabel">{{ proyecto.nombre }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Objetivo:</strong> {{ proyecto.objetivo }}</p>
+                <p><strong>Justificación:</strong> {{ proyecto.justificacion }}</p>
+                <hr>
+                <p><strong>Empresa:</strong> {{ proyecto.id_empresa.razon_social }}</p>
+                <p><strong>RFC:</strong> {{ proyecto.id_empresa.rfc }}</p>
+                <p><strong>Titular:</strong> {{ proyecto.id_empresa.titular }}</p>
+                <p><strong>Cargo:</strong> {{ proyecto.id_empresa.cargo }}</p>
+                <p><strong>Contacto Empresa:</strong> {{ proyecto.id_empresa.correo }} | {{ proyecto.id_empresa.telefono_empresa }}</p>
+                <p><strong>Dirección:</strong> {{ proyecto.id_empresa.calle }} {{ proyecto.id_empresa.numero }}, {{ proyecto.id_empresa.colonia }}, CP: {{ proyecto.id_empresa.codigo_postal }}</p>
+                <p><strong>Nombre Enlace:</strong> {{ proyecto.id_empresa.nombre_enlace }}</p>
+                <p><strong>Contacto Enlace:</strong> {{ proyecto.id_empresa.correo_enlace }} | {{ proyecto.id_empresa.telefono_enlace }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

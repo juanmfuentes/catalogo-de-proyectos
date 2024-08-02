@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4">
+    <div class="ms-4 mt-4">
+        <h1>Lista de Proyectos Seleccionados</h1>
+    </div>
+    <div class="p-4">
+        <a href="{% url 'exportar_proyectos_seleccionados' %}" class="btn btn-primary">Exportar a XLSX</a>
+        <div class="table-responsive">
+            <table class="table mt-4 table-striped table-hover">
+                <thead class="sticky-top">
+                    <tr>
+                        <th>Matrícula</th>
+                        <th>Alumno</th>
+                        <th>Empresa</th>
+                        <th>Proyecto</th>
+                        <th>Programa Educativo</th>
+                        <th>Proceso</th>
+                        <th>Periodo y Año</th>
+                        <th>Asesor Laboral</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody> 
+                    {% for proyectoalumno in proyectos_seleccionados %}
+                    <tr>
+                        <td>{{ proyectoalumno.alumno }}</td>
+                        <td>{{ proyectoalumno.alumno.nombre }} {{ proyectoalumno.alumno.apellido_paterno }} {{ proyectoalumno.alumno.apellido_materno }}</td>
+                        <td>{{ proyectoalumno.proyecto.id_empresa.razon_social }}</td>
+                        <td>{{ proyectoalumno.proyecto.nombre }}</td>
+                        <td>{{ proyectoalumno.alumno.programa_educativo }}</td>
+                        <td>{{ proyectoalumno.proyecto.id_proceso.nombre }}</td>
+                        <td>{{ proyectoalumno.proyecto.periodo }} {{ proyectoalumno.proyecto.año }}</td>
+                        <td>{{ proyectoalumno.proyecto.asesor }}</td>
+                        <td>
+                            <button class="btn btn-danger btn-sm" data-bs-toggle="modal"
+                                data-bs-target="#modalEliminar{{ proyectoalumno.pk }}">Denegar</button>
+                        </td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Eliminar Proyecto -->
+{% for proyectoalumno in proyectos_seleccionados %}
+<div class="modal fade" id="modalEliminar{{ proyectoalumno.pk }}" tabindex="-1"
+    aria-labelledby="modalEliminarLabel{{ proyectoalumno.pk }}" aria-hidden="true">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalEliminarLabel{{ proyectoalumno.pk }}">Denegar Proyecto</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>¿Estás seguro de que deseas denegar el proyecto "{{ proyectoalumno.proyecto.nombre }}" al alumno {{ proyectoalumno.alumno.nombre }} {{ proyectoalumno.alumno.apellido_paterno }} {{ proyectoalumno.alumno.apellido_materno }}?</p>
+                <form action="{% url 'eliminar_proyecto_seleccionado' proyectoalumno.pk %}" method="post">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-danger">Eliminar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+
+{% endblock %}

@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4 container">
+    <div class="ms-4 mt-4">
+        <h1>Catálogo de Proyectos</h1>
+    </div>
+    <div class="row p-4">
+        {% if messages %}
+        <div class="messages">
+            {% for message in messages %}
+            <div class="alert alert-{{ message.tags }}">
+                {{ message }}
+            </div>
+            {% endfor %}
+        </div>
+        {% endif %}
+        {% for proyecto in proyectos %}
+        {% if proyecto.vacantes_disponibles > 0 %}
+        <div class="col-md-3 mb-3">
+            <div class="card">
+                <div class="card-header">
+                    <h5 class="card-title m-1">{{ proyecto.nombre }}</h5>
+                </div>
+                <div class="card-body">
+                    <p><strong>Periodo:</strong> {{ proyecto.periodo }} {{ proyecto.año }}</p>
+                    <p><strong>Proceso:</strong> {{ proyecto.id_proceso.nombre }}</p>
+                    <p><strong>Modalidad:</strong> {{ proyecto.modalidad }}</p>
+                    <p><strong>Vacantes disponibles:</strong> {{ proyecto.vacantes_disponibles }}</p>
+                    <p><strong>Ubicación:</strong> {{ proyecto.id_empresa.ciudad }}, {{proyecto.id_empresa.entidad}}</p>
+                    <form method="post" action="{% url 'alumno_seleccionar_proyecto' proyecto.id %}">
+                        {% csrf_token %}
+                        {% if proyecto.vacantes_disponibles > 0 %}
+                        <button type="submit" class="btn btn-success my-1">Seleccionar</button>
+                        {% else %}
+                        <button type="button" class="btn btn-warning my-1" disabled>No hay vacantes
+                            disponibles</button>
+                        {% endif %}
+                        <button type="button" class="btn btn-secondary my-1" data-bs-toggle="modal"
+                            data-bs-target="#proyectoModal{{ proyecto.id }}"><i class="fa-solid fa-circle-info"></i></button>
+                    </form>
+                </div>
+            </div>
+        </div>
+        {% else %}
+        {% endif %}
+        {% endfor %}
+    </div>
+</div>
+
+{% for proyecto in proyectos %}
+<!-- Modal para mostrar más información del proyecto -->
+<div class="modal fade" id="proyectoModal{{ proyecto.id }}" tabindex="-1" aria-labelledby="proyectoModalLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="proyectoModalLabel">{{ proyecto.nombre }}</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p><strong>Objetivo:</strong> {{ proyecto.objetivo }}</p>
+                <p><strong>Justificación:</strong> {{ proyecto.justificacion }}</p>
+                <p><strong>Asesor Laboral:</strong> {{ proyecto.asesor }}</p>
+                <p><strong>Alumnos requeridos:</strong> {{ proyecto.vacantes }}</p>
+                <hr>
+                <p><strong>Empresa:</strong> {{ proyecto.id_empresa.razon_social }}</p>
+                <p><strong>Titular:</strong> {{ proyecto.id_empresa.titular }}, {{ proyecto.id_empresa.cargo }}</p>
+                <p><strong>Contacto Empresa:</strong> {{ proyecto.id_empresa.correo }} | {{proyecto.id_empresa.telefono_empresa }}</p>
+                <p><strong>Dirección:</strong> {{ proyecto.id_empresa.calle }} {{ proyecto.id_empresa.numero }}, {{ proyecto.id_empresa.colonia }}, CP: {{ proyecto.id_empresa.codigo_postal }}</p>
+                <p><strong>Nombre Enlace:</strong> {{ proyecto.id_empresa.nombre_enlace }}</p>
+                <p><strong>Contacto Enlace:</strong> {{ proyecto.id_empresa.correo_enlace }} | {{ proyecto.id_empresa.telefono_enlace }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+{% endfor %}
+{% endblock %}

@@ -1,0 +1,79 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div style="position: absolute; top: 0; right: 0; padding: 20px;">
+    <div id="messageToast" class="toast hide border-0" role="alert" aria-live="assertive" aria-atomic="true">
+        {% if msg %}
+        <div class="toast-body">
+            <i class="fa-solid fa-triangle-exclamation me-1"></i>
+            {{ msg | safe }}
+        </div>
+        {% endif %}
+    </div>
+</div>
+<div class="vh-100 d-flex justify-content-center align-items-center" style="background: linear-gradient(45deg, rgba(25,135,84,1) 0%, rgba(255,250,250,1) 100%);">
+    <div class="card p-5 shadow rounded-4 bg-light mx-4">
+        <div class="text-center mb-3">
+            <div>
+                {% load static %}
+                <img src="{% static 'images/logo.svg' %}" alt="Logo" height="100" class="mb-3">
+            </div>
+            <h1>Inicio de sesión</h1>
+            <h4 class="fw-light text-muted">Catálogo de Proyectos para Estancias y Estadías</h4>
+        </div>
+        <div class="mb-4">
+            <form method="post">
+                {% csrf_token %}
+                <div class="form-group first mb-2 text-muted">
+                    <label for="username">Usuario</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-user text-muted"></i>
+                        </span>
+                        {{ form.username }}
+                    </div>
+                </div>
+                <div class="form-group last mb-4 text-muted">
+                    <label for="password">Contraseña</label>
+                    <div class="input-group">
+                        <span class="input-group-text">
+                            <i class="fa-solid fa-lock text-muted"></i>
+                        </span>
+                        <input type="password" class="form-control" name="password" id="password">
+                        <button type="button" class="btn btn-outline-secondary" id="togglePassword"
+                            style="border-color: #ced4da !important;">
+                            <i class="fa-solid fa-eye-slash"></i>
+                        </button>
+                    </div>
+                </div>
+                <div class="d-grid gap-2">
+                    <input type="submit" value="Iniciar sesión" class="btn btn-pill text-white btn-block btn-success">
+                </div>
+            </form>
+        </div>
+        <div class="form-group text-center">
+            <p>¿Aún no tienes una cuenta? <a class="link-secondary link-offset-2 link-offset-3-hover link-underline link-underline-opacity-0 link-underline-opacity-75-hover"
+                    href="{% url 'registro' %}">Regístrate</a></p>
+        </div>
+    </div>
+</div>
+<script>
+    document.getElementById("togglePassword").addEventListener("click", function () {
+        var passwordInput = document.getElementById("password");
+        var toggleIcon = document.getElementById("togglePassword").querySelector("i");
+        if (passwordInput.type === "password") {
+            passwordInput.type = "text";
+            toggleIcon.classList.remove("fa-eye-slash");
+            toggleIcon.classList.add("fa-eye");
+        } else {
+            passwordInput.type = "password";
+            toggleIcon.classList.remove("fa-eye");
+            toggleIcon.classList.add("fa-eye-slash");
+        }
+    });
+
+    // Mostrar el toast con el mensaje
+    var messageToast = new bootstrap.Toast(document.getElementById("messageToast"));
+    messageToast.show();
+</script>
+{% endblock %}

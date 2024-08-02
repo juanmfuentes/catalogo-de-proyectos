@@ -1,0 +1,189 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="p-4 container">
+    <div class="p-4">
+        <div class="row-md-4">
+            <h2>Información General</h2>
+            <form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="razon_social" class="form-label">Razón Social</label>
+                            <input type="text" class="form-control" id="razon_social" name="razon_social"
+                                value="{{ empresa.razon_social }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="rfc" class="form-label">RFC</label>
+                            <input type="text" class="form-control" id="rfc" name="rfc" value="{{ empresa.rfc }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="telefono_empresa" class="form-label">Teléfono de Contacto</label>
+                            <input type="text" class="form-control" id="telefono_empresa" name="telefono_empresa"
+                                value="{{ empresa.telefono_empresa }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="titular" class="form-label">Titular</label>
+                            <input type="text" class="form-control" id="titular" name="titular"
+                                value="{{ empresa.titular }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="cargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="cargo" name="cargo" value="{{ empresa.cargo }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="cargo" class="form-label">Cargo</label>
+                            <input type="text" class="form-control" id="cargo" name="cargo" value="{{ empresa.correo }}"
+                                readonly>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row-md-3">
+            <h2>Información de Enlace</h2>
+            <form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="nombre_enlace" class="form-label">Nombre Completo</label>
+                            <input type="text" class="form-control" id="nombre_enlace" name="nombre_enlace"
+                                value="{{ empresa.nombre_enlace }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="telefono_enlace" class="form-label">Teléfono de Oficina</label>
+                            <input type="text" class="form-control" id="telefono_enlace" name="telefono_enlace"
+                                value="{{ empresa.telefono_enlace }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="correo_enlace" class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" id="correo_enlace" name="correo_enlace"
+                                value="{{ empresa.correo_enlace }}" readonly>
+                        </div>
+                    </div>
+            </form>
+        </div>
+        <div class="row-md-3">
+            <h2>Dirección</h2>
+            <form>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="calle" class="form-label">Calle</label>
+                            <input type="text" class="form-control" id="calle" name="calle" value="{{ empresa.calle }}"
+                                readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="numero" class="form-label">Número</label>
+                            <input type="text" class="form-control" id="numero" name="numero"
+                                value="{{ empresa.numero }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="colonia" class="form-label">Colonia</label>
+                            <input type="text" class="form-control" id="colonia" name="colonia"
+                                value="{{ empresa.colonia }}" readonly>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="ciudad" class="form-label">Ciudad</label>
+                            <input type="text" class="form-control" id="ciudad" name="ciudad"
+                                value="{{ empresa.ciudad }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="codigo_postal" class="form-label">Código Postal</label>
+                            <input type="text" class="form-control" id="codigo_postal" name="codigo_postal"
+                                value="{{ empresa.codigo_postal }}" readonly>
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            <label for="entidad" class="form-label">Entidad</label>
+                            <input type="text" class="form-control" id="entidad" name="entidad"
+                                value="{{ empresa.entidad }}" readonly>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+        <div class="row-md-3">
+            <h2>Cambiar Contraseña</h2>
+            <form method="post">
+                {% csrf_token %}
+                {{ form.non_field_errors }}
+                <div class="row">
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            {{ form.old_password.errors }}
+                            <label for="{{ form.old_password.id_for_label }}" class="form-label">Contraseña
+                                actual</label>
+                            <input type="password"
+                                class="form-control {% if form.old_password.errors %}is-invalid{% endif %}"
+                                id="{{ form.old_password.id_for_label }}" name="{{ form.old_password.html_name }}">
+                            {% for error in form.old_password.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            {{ form.new_password1.errors }}
+                            <label for="{{ form.new_password1.id_for_label }}" class="form-label">Nueva
+                                contraseña</label>
+                            <input type="password"
+                                class="form-control {% if form.new_password1.errors %}is-invalid{% endif %}"
+                                id="{{ form.new_password1.id_for_label }}" name="{{ form.new_password1.html_name }}">
+                            {% for error in form.new_password1.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="col-md-4">
+                        <div class="mb-3">
+                            {{ form.new_password2.errors }}
+                            <label for="{{ form.new_password2.id_for_label }}" class="form-label">Confirmar
+                                contraseña</label>
+                            <input type="password"
+                                class="form-control {% if form.new_password2.errors %}is-invalid{% endif %}"
+                                id="{{ form.new_password2.id_for_label }}" name="{{ form.new_password2.html_name }}">
+                            {% for error in form.new_password2.errors %}
+                            <div class="invalid-feedback">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-4">
+                            <button type="submit" class="btn btn-success">Cambiar contraseña</button>
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+    {% endblock %}

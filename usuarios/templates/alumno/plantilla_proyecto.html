@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="UTF-8">
+    <style>
+        /* Estilos CSS para el PDF */
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+        }
+
+        h1 {
+            font-size: 24px;
+            margin-bottom: 20px;
+        }
+
+        h2 {
+            font-size: 20px;
+            margin-bottom: 15px;
+        }
+
+        h4 {
+            font-size: 18px;
+            margin-bottom: 10px;
+        }
+
+        /* Estilos para el header */
+        header {
+            text-align: center;
+            margin-bottom: 20px;
+        }
+
+        .logo {
+            width: 100px;
+            height: auto;
+        }
+
+        .catalog-title {
+            margin: 10px 0;
+            font-size: 24px;
+        }
+
+        /* Estilos para las secciones */
+        .section {
+            margin-bottom: 20px;
+        }
+
+        .section-title {
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .section-content p {
+            margin-bottom: 5px;
+        }
+
+        /* Estilos para el footer */
+        footer {
+            bottom: 0;
+            width: 100%;
+            text-align: center;
+            font-size: 12px;
+            color: gray;
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <div>
+            <img class="logo" src="../../static/images/logo.svg" height="180" alt="Logo">
+            <h1 class="catalog-title">Catálogo de proyectos</h1>
+        </div>
+    </header>
+
+    <h2>{{ proyecto.nombre }}</h2>
+
+    <div class="section">
+        <h4>Información del proyecto</h4>
+        <div class="section-content">
+            <p><strong>Periodo:</strong> {{ proyecto.periodo }} {{ proyecto.año }}</p>
+            <p><strong>Proceso:</strong> {{ proyecto.id_proceso.nombre }}</p>
+            <p><strong>Modalidad:</strong> {{ proyecto.modalidad }}</p>
+            <p><strong>Asesor Laboral:</strong> {{ proyecto.asesor }}</p>
+            <p><strong>Ubicación:</strong> {{ proyecto.id_empresa.ciudad }}, {{ proyecto.id_empresa.entidad }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h4>Información de la empresa</h4>
+        <div class="section-content">
+            <p><strong>Empresa:</strong> {{ proyecto.id_empresa.razon_social }}</p>
+            <p><strong>RFC:</strong> {{ proyecto.id_empresa.rfc }}</p>
+            <p><strong>Titular:</strong> {{ proyecto.id_empresa.titular }}</p>
+            <p><strong>Cargo:</strong> {{ proyecto.id_empresa.cargo }}</p>
+            <p><strong>Contacto Empresa:</strong> {{ proyecto.id_empresa.correo }} | {{proyecto.id_empresa.telefono_empresa }}</p>
+            <p><strong>Dirección:</strong> {{ proyecto.id_empresa.calle }} {{ proyecto.id_empresa.numero }}, {{proyecto.id_empresa.colonia }}, CP: {{ proyecto.id_empresa.codigo_postal }}</p>
+            <p><strong>Nombre Enlace:</strong> {{ proyecto.id_empresa.nombre_enlace }}</p>
+            <p><strong>Contacto Enlace:</strong> {{ proyecto.id_empresa.correo_enlace }} | {{proyecto.id_empresa.telefono_enlace }}</p>
+        </div>
+    </div>
+
+    <div class="section">
+        <h4>Descripción del proyecto</h4>
+        <div class="section-content">
+            <p><strong>Objetivo:</strong> {{ proyecto.objetivo }}</p>
+            <p><strong>Justificación:</strong> {{ proyecto.justificacion }}</p>
+        </div>
+    </div>
+
+    <footer>
+        <p>Derechos de autor © 2024 [Nombre de la Universidad]. Todos los derechos reservados.</p>
+        <p>Catálogo de Proyectos 2024</p>
+    </footer>
+</body>
+
+</html>
